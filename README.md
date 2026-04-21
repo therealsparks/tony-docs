@@ -39,7 +39,7 @@ Plain-English summary of what I've figured out so far. The five things the clien
 
 5. **Fresh workspace snapshot.** The zip from 2026-04-01 is about three weeks stale and the live output has moved a lot since. Could you regenerate a fresh sanitized snapshot from your laptop before I start setting up the VPS? Same exclusions as before — no `.openclaw/secrets/`, no `memory/`.
 
-6. **The other developer.** The `README.txt` inside the Dropbox bundle was addressed to a different developer (I'm guessing the Pakistani contractor who's been slow to respond). Are they still involved, or am I taking over this workstream entirely? Want to make sure we're not duplicating or conflicting.
+6. **The other developer.** The `README.txt` inside the Dropbox bundle was addressed to a different developer. Are they still involved, or am I taking over this workstream entirely? Want to make sure we're not duplicating or conflicting.
 
 7. **The 42-document SOP corpus.** The processes playbook in the snapshot references 42 documents but only 15 were ingested. Can I get view access to the remaining 27 DOCX files in your Google Drive? Understanding the full business context will help me figure out where Tony needs to grow.
 
