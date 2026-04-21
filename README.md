@@ -29,10 +29,6 @@ Plain-English summary of what I've figured out so far. The five things the clien
 
 ## 📋 Questions for Matt
 
-_(This section is worded as if I'm emailing Matt directly — easy to copy/paste when we have a conversation.)_
-
-Hi Matt — a few things I've been chewing on as I dig into the material you shared. Most of these can wait, but the first two I'd like to align on soon because they shape a lot of the other decisions.
-
 1. **Target OS for the VPS — can we go Linux?** Your handoff notes mention "Windows VPS, or Linux + Wine." I'd strongly steer us away from Wine: it emulates Windows inside Linux, which adds a whole class of compatibility bugs and defeats the reason to switch OS in the first place. The good news — OpenClaw itself is a Node.js package, which runs natively on Linux, and your own README notes reference "switch to the Linux launcher if preferred" and a `/opt/openclaw/workspace` install path. **Unless there's a Windows-only dependency I haven't spotted, Linux is cheaper, simpler, and the more production-ready choice.** Happy to default to Linux unless you have a reason to stick with Windows.
 
 2. **Scope of this engagement.** Is this a pure lift-and-shift from your laptop to a VPS, or are we also closing gaps in what Tony can do today? The skill test matrix in the snapshot (`reports/bot_skill_test_matrix.md`) lists several "Blocked" capabilities — Dropbox file transfer, voiceover/music/sound-effect email handlers, Kling video, "MAKE FORMAL" drafting. If those are part of the job I'd like to plan for them.
