@@ -2,9 +2,9 @@
 
 [← docs home](../README.md)
 
-Tony is email-driven — he doesn't have a web app to log into. To get him to do something, a whitelisted team member sends an email to `tony@austinvisuals.com` with a specific subject line. He reads it, performs the action, and replies with a confirmation.
+Tony accepts commands via email. There is no web UI. A whitelisted sender emails `tony@austinvisuals.com` with a specific subject line. Tony executes the command and replies with a confirmation.
 
-This guide lists every command that currently works and what Tony does when he receives it. For team members who just want to get work done.
+This guide lists the currently supported commands and their expected behavior.
 
 ---
 
@@ -27,7 +27,7 @@ Emails from anyone else will be ignored (or, for some commands, trigger an acces
 - **`tony@austinvisuals.com`** — the main command inbox. Nearly everything in this guide goes here.
 - **`bot@austinvisuals.com`** — a secondary inbox Tony also watches. Currently used only for the Task Intake Dashboard flow (not yet fully live).
 
-When in doubt, use `tony@`.
+For general use, send to `tony@austinvisuals.com`.
 
 ---
 
@@ -69,7 +69,7 @@ These aren't email commands — they're just URLs you can bookmark:
 - [**Invoices**](https://therealsparks.github.io/tony/invoices.html) — QuickBooks invoice snapshot
 - [**Competitor brief**](https://therealsparks.github.io/tony/competitor-brief.html) — daily competitor intel
 - [**Status page**](https://therealsparks.github.io/tony/status-page.html) — Tony's own health and known issues
-- [**Tony commands**](https://therealsparks.github.io/tony/tony-commands.html) — Tony's own summary of what he can do
+- [**Tony commands**](https://therealsparks.github.io/tony/tony-commands.html) — Tony's own command summary
 
 ---
 
@@ -85,7 +85,7 @@ The following commands may have been advertised or discussed but **are not curre
 - `Kling video — <Shot>` — Kling CLI exists, no email trigger
 - `MAKE FORMAL` / `PERSONALIZE NOTES` email-drafting prefixes — no drafting pipeline implemented
 
-If you need something this guide says is Blocked, talk to Matt directly.
+For unsupported commands, contact Matt.
 
 ---
 
@@ -94,9 +94,9 @@ If you need something this guide says is Blocked, talk to Matt directly.
 For almost every command, Tony replies by email:
 
 - **Success:** confirmation message, plus a relevant link (Dropbox URL, project-status URL, generated file).
-- **Needs clarification:** Tony asks a follow-up question — he'll say so explicitly, not guess.
+- **Needs clarification:** Tony replies with a follow-up question rather than guessing.
 - **Access required:** if you try something you're not authorized for, you'll get an "access request sent" reply, and Matt or Nancy can approve with `Approve <you> for <Project>`.
-- **Failure:** if Tony hits an error (API outage, folder not found, etc.), he replies with the error text. Forward that reply to Matt if you can't interpret it.
+- **Failure:** if Tony encounters an error (API outage, folder not found, etc.), the reply contains the error text. Forward the reply to Matt if the message isn't self-explanatory.
 
 Expected turnaround: most email commands complete within 1–5 minutes (Gmail poll interval + action time). AI video generation is the slow one — typically a few minutes per shot.
 

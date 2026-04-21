@@ -2,7 +2,7 @@
 
 [← architecture index](README.md) · [← docs home](../README.md)
 
-This is the primary way Tony is *used*. The AV team doesn't log into anything — they just email `tony@austinvisuals.com` (or CC him on a client thread). A Gmail-polling script picks it up, dispatches to a handler, the handler does the work against external services, and replies.
+The primary usage surface for Tony. Team members send email to `tony@austinvisuals.com` (or CC/BCC on client threads). A Gmail polling script reads incoming messages, dispatches them to a handler based on the subject line, the handler executes against the relevant external service, and a confirmation is emailed back.
 
 ```mermaid
 sequenceDiagram
@@ -27,9 +27,9 @@ sequenceDiagram
     W->>G: deploy_*.py commits dashboard changes
 ```
 
-## What this unlocks for the team
+## Supported actions
 
-Anyone whitelisted can do the following with just an email:
+Whitelisted senders can perform the following by email:
 
 - **File an attachment to a project's Dropbox folder** (forward + subject line `Upload <Project>`)
 - **Create a new Dropbox project folder with the standard 7 subfolders** (subject `New Project <Name>`)
@@ -39,9 +39,9 @@ Anyone whitelisted can do the following with just an email:
 
 Full list of working commands and what they do is in the [Emailing Tony guide](../guides/emailing-tony.md).
 
-## What's blocked today
+## Unsupported commands
 
-Per `reports/bot_skill_test_matrix.md` in the workspace snapshot, several commands that the team *might* expect to work are currently **not implemented**:
+Per `reports/bot_skill_test_matrix.md` in the workspace snapshot, the following commands are referenced elsewhere but **not implemented**:
 
 - `Dropbox transfer <Project> → <Owner>` — no handler written
 - `List client folders` — no handler written
@@ -49,12 +49,12 @@ Per `reports/bot_skill_test_matrix.md` in the workspace snapshot, several comman
 - `Kling video — <Shot>` — CLI exists, no email glue
 - `MAKE FORMAL` / `PERSONALIZE NOTES` prefixes — advertised but no drafting pipeline
 
-If the team needs these, they'd need to be built — don't advertise them as working.
+Each would require additional handler implementation.
 
-## Observations about this pattern
+## Notes
 
-- All of this glue lives in the **workspace** (the ~175 Python scripts in `scripts/`). The contractor has only seen the 2026-04-01 pre-migration snapshot of those scripts; the live server may have evolved them.
-- The whitelist lives in `data/bot_whitelist.json`. Extending it requires editing the file on the server and getting Tony to reload.
+- The handler code lives in the **workspace** (~175 Python scripts in `scripts/`). The only visible copy is the 2026-04-01 pre-migration snapshot; the live copy on the server may have diverged.
+- The whitelist lives in `data/bot_whitelist.json`. Additions require editing the file on the server and reloading the runtime.
 - Gmail uses OAuth; those tokens live in the server's `secrets/` directory.
 
 ---

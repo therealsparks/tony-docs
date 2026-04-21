@@ -2,22 +2,22 @@
 
 [← docs home](../README.md)
 
-**Historical reference.** A sanitized copy of Matt's laptop workspace at `C:\Users\matthewwinters\.openclaw\workspace`, frozen on **2026-04-01** and shared with the contractor pre-migration. This is what Tony's source code looked like as of that date — identity files, dashboards, automation scripts, skills, and data. Secrets and `memory/` were intentionally stripped.
+**Historical reference.** A sanitized copy of Matt's laptop workspace at `C:\Users\matthewwinters\.openclaw\workspace`, frozen on **2026-04-01** and delivered pre-migration. Contains identity files, dashboards, automation scripts, skills, and reference data. Secrets and `memory/` were excluded.
 
-Since Tony now runs on a server (not the laptop), this snapshot is no longer a mirror of what's actually running. Tony's live source may have evolved in the weeks since. Treat this file as useful *architectural* reference, not *current-state* ground truth.
+Tony now runs on a server; this snapshot does not reflect the current source. Useful as a reference for workspace structure and file roles.
 
 **Delivered as:** `TonyWorkspace-2026-04-01.zip` (~62 MB compressed, ~246 MB unzipped) via a Dropbox link in the onboarding spreadsheet.
 
 ## Top-level identity + policy files
 
-These define *who* Tony is and how he behaves. OpenClaw reads them every session.
+Identity and policy files loaded by OpenClaw at session start.
 
 | File | Purpose |
 |------|---------|
 | `AGENTS.md` | Main system prompt / operator manual. Covers memory, session hygiene, group-chat etiquette, heartbeats. |
 | `IDENTITY.md` | Name (Tony), vibe, emoji, avatar. |
 | `SOUL.md` | Personality/values guardrails. |
-| `USER.md` | Who Matt is + his cost-control and email-review rules (pause above $25, draft outbound emails for review). |
+| `USER.md` | Matt's profile. Cost-control rules (pause above $25) and email-review policy (draft outbound for review). |
 | `TOOLS.md` | Local infra notes (e.g. Dropbox account scoped to `info@austinvisuals.com`, delete-forbidden policy). |
 | `SESSION_POLICY.md` | Session lifecycle rules + `scripts/session_housekeeper.py` docs. |
 | `README.txt` | Matt's restore instructions. |
@@ -36,7 +36,7 @@ Static dashboards served via GitHub Pages (or any static host). Each HTML has a 
 
 ## `scripts/` — 175 files of automation glue
 
-The operational heart of Tony. Roughly organized by integration:
+Automation scripts. Roughly organized by integration:
 
 - **Dropbox:** `dropbox_*.py`, `upload_dropbox.py`, `email_upload_handler.py`, `cc_scan_handler.py` (CC/BCC passive filing)
 - **Gmail:** `gmail_*.py` (OAuth, POP, send/read for `bot@` and `tony@` mailboxes), `gmail_bot_utils.py`
@@ -65,7 +65,7 @@ Modular capability definitions Tony loads on demand. Each has a `SKILL.md` front
 
 ## `data/`
 
-Reference data — mostly research outputs and registries, not live.
+Reference data: research outputs and registries.
 
 - `openclaw_av_processes.md`, `av_processes_playbook.md` — large synthesized SOP/knowledge packs built from 15 of 42 DOCX files in Matt's Drive (marketing, sales, production workflows). Note: self-described as **partial ingest**.
 - `austinvisuals-videos.md`, `portfolio-urls.txt` — scraped portfolio catalog from austinvisuals.com
@@ -81,5 +81,5 @@ Reference data — mostly research outputs and registries, not live.
 
 ## `reports/`
 
-- `bot_skill_test_matrix.md` — **the single most useful onboarding doc in the bundle.** Skill-by-skill test matrix from the 2026-03-28 Gmail migration: 20+ capabilities scored Pass / Blocked / Pending, with specific gaps called out (Dropbox transfer handler missing, voice/music email handlers missing, MAKE FORMAL pipeline not implemented, etc.). The [Emailing Tony guide](../guides/emailing-tony.md) is distilled from this file.
+- `bot_skill_test_matrix.md` — Skill-by-skill test matrix from the 2026-03-28 Gmail migration. 20+ capabilities scored Pass / Blocked / Pending, with specific gaps noted (Dropbox transfer handler missing, voice/music email handlers missing, MAKE FORMAL pipeline not implemented). The [Emailing Tony guide](../guides/emailing-tony.md) is distilled from this file.
 - `shared_docs_*.csv`, `shared_doc_copies_for_cam.csv` — Drive sharing audits.

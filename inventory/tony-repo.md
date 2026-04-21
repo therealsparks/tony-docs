@@ -7,37 +7,37 @@
 - **Owner on GitHub:** `therealsparks` (Matt's GitHub handle)
 - **Status:** actively in use. The server pushes a heartbeat commit roughly every 15 minutes, plus content updates whenever dashboards change.
 
-## What it actually is
+## Description
 
-This is the **publish target** for the `deploy_github.py` + `deploy_analytics.py` + `deploy_status_page.py` + `deploy_*.py` scripts in the workspace. Tony runs on the server, regenerates HTML/JSON dashboards, checks them into this repo, and pushes. GitHub Pages serves them at the URL above. **It is not a second codebase — it is the runtime output of the workspace.**
+Publish target for the `deploy_github.py`, `deploy_analytics.py`, `deploy_status_page.py`, and related `deploy_*.py` scripts in the workspace. The server regenerates HTML and JSON dashboards, commits them to this repo, and pushes. GitHub Pages serves them at the URL above. This is not a source repository; it contains only generated artifacts.
 
-Confirmed by: the `site/` subfolder inside the TonyWorkspace snapshot is itself a git clone of this same repo, frozen at commit `e30cbb6` from 2026-03-27 (484 commits in at that point). The live repo is now at 7,400+ commits — roughly 7,000 commits have accumulated since that early snapshot.
+The `site/` subfolder inside the TonyWorkspace snapshot is a git clone of this same repo, frozen at commit `e30cbb6` from 2026-03-27 (484 commits in). The live repo is now at 7,400+ commits.
 
 ## Commit pattern (7,400+ total, starting 2026-03-21)
 
 | Count | Message pattern | What it is |
 |------:|-----------------|------------|
-| 6,600+ | `Status heartbeat <timestamp>Z` | Every ~15 min, rewrites `status.json` and commits. This is Tony's "I'm alive" signal. |
+| 6,600+ | `Status heartbeat <timestamp>Z` | Every ~15 min, rewrites `status.json` and commits. Liveness signal. |
 | ~190  | `Update X` / `Sync X` | Dashboard and data refreshes (analytics, projects, invoices, competitor brief, intel) |
 |    63 | `Update status page with known bugs section` | — |
 |    63 | `Sync project status page` | — |
 |    58 | `Sync QuickBooks invoice snapshot` | QBO pull pushed here |
 |    40 | `Update tasks personal workspace` | — |
-|     9 | _commits authored by "Tony (OpenClaw)"_ | Tony itself making edits to the site (all on 2026-03-25 and 2026-03-26 — e.g. *"Convert AV process page into training modules"*, *"Fix analytics suggestions encoding"*). Everything else is authored as `therealsparks`. |
+|     9 | _commits authored by "Tony (OpenClaw)"_ | Edits made directly by the runtime (all on 2026-03-25 and 2026-03-26 — e.g. *"Convert AV process page into training modules"*, *"Fix analytics suggestions encoding"*). All other commits are authored as `therealsparks`. |
 
 ## Contents (flat layout — it's a GitHub Pages root)
 
 - **Dashboards:** `index.html`, `analytics.html`, `project-status.html`, `invoices.html`, `tasks.html`, `tasks-personal.html`, `status-page.html`, `competitor-brief.html`, `crm.html`, `directory.html`, `av-process.html`, `tony-commands.html`, `storyboards.html`, `chat-nancy.html`
 - **Data:** `analytics.json`, `projects.json`, `status.json`, `competitor-brief.json`, `intel-brief.json`, `data/quickbooks/invoices.json`, `data/quickbooks/purchases.json`
-- **`scripts/`** → a single script: `qbo_fetch_purchases.py`. Note it expects `.openclaw/secrets/quickbooks.json` at the repo root, which confirms Tony runs this script against a local checkout on the server.
-- **`site/` and `site-deploy/`** → both contain the same 4 files (`index.html`, `invoices.html`, `chat-nancy.html`, `storyboards.html`). Appears to be a separate per-page publish bundle — md5-identical to each other. Purpose unclear. See [Questions for Matt #6](../README.md#-questions-for-matt).
+- **`scripts/`** → a single script: `qbo_fetch_purchases.py`. The script expects `.openclaw/secrets/quickbooks.json` at the repo root, indicating it runs against a local checkout on the server.
+- **`site/` and `site-deploy/`** → both contain the same 4 files (`index.html`, `invoices.html`, `chat-nancy.html`, `storyboards.html`). Appear to be separate per-page publish bundles — md5-identical. Purpose undetermined. See [Questions for Matt #6](../README.md#-questions-for-matt).
 - **`docs/feature-backlog.md`** — a skill backlog Tony writes to. Last entry: 2026-04-02, mentions "upcoming VPS build" and "Matt's seven current focus items."
 - **`qbo-callback.html`** — landing page for the QuickBooks OAuth flow. Tony displays this URL to the user so they can copy the post-auth URL back.
 
-## What this repo tells us
+## Notes
 
-- `feature-backlog.md` says "upcoming VPS build" + "Priority Stack" + "Matt's seven current focus items." This is the best in-repo hint we have about what's being prioritized for Tony. See [Questions for Matt #5](../README.md#-questions-for-matt).
-- No `.gitignore`, no `.github/workflows/`, no git hooks — nothing automated on the GitHub side. Everything is driven from the server's push.
+- `feature-backlog.md` references "upcoming VPS build", a "Priority Stack", and "Matt's seven current focus items" — the closest in-repo indicator of current priorities. See [Questions for Matt #5](../README.md#-questions-for-matt).
+- No `.gitignore`, no `.github/workflows/`, no git hooks — nothing automated on the GitHub side. All activity is driven by the server's push.
 
 ## Authors on this repo
 

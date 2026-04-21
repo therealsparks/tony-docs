@@ -2,7 +2,7 @@
 
 [← architecture index](README.md) · [← docs home](../README.md)
 
-This is the big-picture map of the Tony system as it runs today. The server is the brain; everything else is either an external service Tony talks to or an output Tony produces.
+Components are grouped into three domains: the host server (runtime, workspace, scheduled tasks), external services the system integrates with, and the GitHub publish target.
 
 ```mermaid
 flowchart LR
@@ -60,17 +60,17 @@ flowchart LR
     class SEC,MEM missing
 ```
 
-> **🔴 Red-dashed boxes = not visible to the contractor.** `secrets/` and `memory/` live on the server and weren't part of the delivered bundles.
+> **🔴 Red-dashed boxes = not visible in the delivered material.** `secrets/` and `memory/` live on the server and were not included in the bundles shared to date.
 
-## What each piece is, in plain terms
+## Components
 
-- **OpenClaw runtime** — The actual Tony engine. A Node.js install that includes the `openclaw` package, `node-llama-cpp`, and SDKs for every service Tony talks to.
-- **Workspace** — The folder Tony reads from every session: identity files (who he is), automation scripts (what he does), skills (specialized capabilities), and data (projects, processes, reference).
-- **Secrets** — Credentials Tony needs. Stored separately from the workspace so sharing the workspace doesn't leak keys. Not part of what the contractor has been given.
-- **Memory** — Tony's notes to himself between sessions. Regenerates on its own.
-- **Scheduled tasks** — The host's job scheduler (could be `cron`, `systemd` timers, or Windows Task Scheduler — the contractor hasn't seen the server directly). Fires Tony's periodic jobs: the 15-minute heartbeat, QuickBooks sync, watchdogs.
-- **External services** — The seven buckets Tony talks to. He's got OAuth tokens or API keys for each.
-- **GitHub repo + Pages** — The publish target. Tony generates HTML/JSON dashboards, pushes them to `therealsparks/tony` on GitHub, and GitHub Pages serves them as a website.
+- **OpenClaw runtime** — The Node.js runtime. Installs the `openclaw` package, `node-llama-cpp`, and SDKs for each integrated service.
+- **Workspace** — Source directory loaded each session: identity and policy files, automation scripts, skills, and reference data.
+- **Secrets** — Credentials, kept separate from the workspace so the workspace can be shared without leaking keys. Not included in the delivered material.
+- **Memory** — Between-session state. Regenerates automatically.
+- **Scheduled tasks** — The host's job scheduler (cron, systemd timers, or Windows Task Scheduler — not determined from the delivered material). Runs the 15-minute heartbeat, QuickBooks sync, and watchdogs.
+- **External services** — Seven external integrations, accessed via OAuth tokens or service-account keys.
+- **GitHub repo + Pages** — The publish target. HTML and JSON dashboards are pushed to `therealsparks/tony` and served by GitHub Pages.
 
 ---
 

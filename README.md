@@ -5,17 +5,15 @@ Central documentation hub for **Tony**, the AI assistant used at Austin Visuals.
 ## Who this is for
 
 - **Right now:** Matt (founder of Austin Visuals) and the contractor taking inventory of the system.
-- **Over time:** anyone on the AV team who needs to understand Tony, talk to him effectively, or extend what he does.
+- **Over time:** anyone on the AV team who needs to understand Tony, use it effectively, or extend its capabilities.
 
-Tony is a real thing Matt built on top of a framework called **OpenClaw**. He handles email-driven work for the team — filing client uploads to Dropbox, tracking projects, generating AI videos, publishing dashboards — and runs on a server Matt operates.
+Tony is an AI assistant built on the **OpenClaw** framework. It handles email-driven work for the team — filing client uploads to Dropbox, tracking projects, generating AI videos, publishing dashboards — and runs on a server Matt operates.
 
 This doc describes the moving parts, how they connect, and where each piece of information lives. It's an inventory, not a proposal.
 
 ---
 
 ## 🖼️ The big picture
-
-If you remember one thing about Tony, remember this diagram. Everything else is detail.
 
 ```mermaid
 flowchart LR
@@ -38,9 +36,9 @@ flowchart LR
 
 **How to read it:**
 
-- **The team talks to Tony by email.** That's it — no app to log into. Send an email to `tony@austinvisuals.com` with a specific subject line and he does the thing. (See [Emailing Tony](guides/emailing-tony.md) for the list of commands.)
-- **Tony does the actual work through the services on the right.** He has logins to Dropbox, Gmail, Google Drive, QuickBooks, and various AI tools. When an email asks him to file a client upload, he puts it in Dropbox. When it asks him to generate a video, he calls the AI service.
-- **Tony publishes dashboards as a website.** Not a chat app, not a PDF — a live website anyone on the team can bookmark. Projects, invoices, analytics, health status.
+- **Team members interact by email.** There is no web UI. Messages sent to `tony@austinvisuals.com` with a specific subject line are routed to a handler. See [Emailing Tony](guides/emailing-tony.md) for supported commands.
+- **Work is performed against external services.** Tony holds credentials for Dropbox, Gmail, Google Drive, QuickBooks, and various AI APIs. Each handler calls the appropriate service — e.g. an upload command writes to Dropbox; a video-generation command calls Google Veo.
+- **Output is published as a static website.** Dashboards (projects, invoices, analytics, health status) are generated as HTML and JSON and served via GitHub Pages.
 
 ---
 
@@ -48,15 +46,15 @@ flowchart LR
 
 Summary of what's true about Tony today, based on what's directly visible from the GitHub repo and the files in dropbox that were shared with Niaz.
 
-1. **The GitHub repo `therealsparks/tony` is Tony's *published output*, not his source code.** Tony runs on a server, generates HTML/JSON dashboards, and pushes them to this repo. GitHub Pages serves them at [therealsparks.github.io/tony](https://therealsparks.github.io/tony/). The repo itself doesn't contain Tony's "brain" — that lives in a workspace directory on the server.
+1. **The GitHub repo `therealsparks/tony` contains Tony's *published output*, not the source code.** The server regenerates HTML and JSON dashboards and pushes them to this repo. GitHub Pages serves them at [therealsparks.github.io/tony](https://therealsparks.github.io/tony/). The source code lives in a workspace directory on the server, not in this repo.
 
 2. **The repo is actively written to every ~15 minutes.** A heartbeat job on the server rewrites `status.json` and pushes. Content-update pushes happen on top of that whenever Tony does real work (syncs QuickBooks, pulls GA4, processes an email, etc.). 7,400+ commits since 2026-03-21 — see [inventory/tony-repo.md](inventory/tony-repo.md).
 
-3. **Tony's source code isn't in a repo the contractor has seen.** The only source we have direct visibility into is the pre-migration `TonyWorkspace-2026-04-01.zip` snapshot (175 scripts, identity files, 3 AgentSkills). That snapshot is a historical artifact — Tony has been running on the server for weeks, so the live source may have evolved since the snapshot was cut.
+3. **Tony's source code is not in any repo visible in the delivered material.** The only source accessible is the pre-migration `TonyWorkspace-2026-04-01.zip` snapshot (175 scripts, identity files, 3 AgentSkills). That snapshot is a historical artifact; the live source on the server may have diverged in the weeks since.
 
-4. **The delivered bundles are pre-migration artifacts.** `ClawLauncher-Windows.zip` and `TonyWorkspace-2026-04-01.zip` describe Tony as he ran on Matt's laptop before the migration. They're useful reference for understanding the architecture — not a mirror of the live system.
+4. **The delivered bundles are pre-migration artifacts.** `ClawLauncher-Windows.zip` and `TonyWorkspace-2026-04-01.zip` describe Tony as it ran on Matt's laptop before the migration. Useful for understanding the architecture; not a mirror of the live system.
 
-5. **Our view of Tony is indirect.** We see him through the publish repo (his output) and the historical bundles (his pre-migration source). We don't currently have direct access to the running server or its `memory/` and `secrets/` folders.
+5. **The system is visible only indirectly.** Observable surfaces are the publish repo (output) and the delivered bundles (pre-migration source). There is no direct access to the running server or to its `memory/` and `secrets/` folders.
 
 ---
 
@@ -109,9 +107,7 @@ Practical how-tos for using Tony day-to-day.
 
 ## A note on tone
 
-Where the language in these docs reads like correspondence — *"worth asking Matt about…"*, *"I suspect…"* — treat that as notes-in-progress. As questions get answered, the correspondence-style prose will firm up into stated fact.
-
-The `guides/` section is different: those pages are drawn only from confirmed sources and should read as evergreen reference.
+This is a working inventory; sections will be revised as open questions are answered. The `guides/` section is drawn from confirmed sources and intended as stable reference.
 
 ---
 

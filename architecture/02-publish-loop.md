@@ -2,7 +2,7 @@
 
 [← architecture index](README.md) · [← docs home](../README.md)
 
-Every ~15 minutes a scheduled task on the server fires a **heartbeat**. Separately, whenever Tony actually does something (gets an email, runs a sync, processes an upload), a `deploy_*.py` script regenerates the affected HTML/JSON and pushes it. This is why the `tony` repo has accumulated 7,000+ commits since it started.
+Every ~15 minutes a scheduled task on the server fires a **heartbeat** commit. Separately, whenever Tony processes an event (inbound email, scheduled sync, upload), a `deploy_*.py` script regenerates the affected HTML and JSON and pushes them. These two mechanisms account for the 7,000+ commits on the repo since 2026-03-21.
 
 ```mermaid
 sequenceDiagram
@@ -32,15 +32,15 @@ sequenceDiagram
 
 ## Two independent rhythms
 
-**Heartbeat (blue).** A "Tony is alive" signal. Every ~15 minutes a scheduled task on the server runs a small job that writes the current timestamp and known issues into `status.json`, commits it, and pushes. If heartbeats stop arriving in the repo, something is wrong with Tony (or with the server he runs on). This is also what makes [therealsparks.github.io/tony/status-page.html](https://therealsparks.github.io/tony/status-page.html) show a "last seen" time.
+**Heartbeat (blue).** Liveness signal. Every ~15 minutes a scheduled task writes the current timestamp and known issues into `status.json`, commits, and pushes. Missing heartbeats indicate a stalled runtime or host. [therealsparks.github.io/tony/status-page.html](https://therealsparks.github.io/tony/status-page.html) renders the most recent heartbeat as a "last seen" time.
 
-**Content updates (green).** Happen whenever Tony does real work. The QuickBooks syncer pulls invoices → regenerates `invoices.html` → pushes. A GA4 pull → regenerates `analytics.html` → pushes. A new project email → updates `projects.json` → regenerates `project-status.html` → pushes. Each of these is a separate `deploy_*.py` script (there are about half a dozen of them).
+**Content updates (green).** Emitted when a handler or scheduled job changes state. QuickBooks syncs regenerate `invoices.html`; GA4 pulls regenerate `analytics.html`; new-project emails update `projects.json` and regenerate `project-status.html`. Each path has its own `deploy_*.py` script (roughly half a dozen total).
 
-## Observations about this pattern
+## Notes
 
-- The publish flow is simple and self-contained: there's no CI/CD on the GitHub side (no Actions, no hooks). Everything is driven from the server that pushes.
-- The `github-token.txt` PAT is part of the server's `secrets/` directory (not visible to the contractor).
-- Because the repo receives a push roughly every 15 minutes, anyone editing the repo directly on GitHub would likely collide with the server's next push.
+- No CI/CD on the GitHub side (no Actions, no hooks). All publish activity is driven by the server's push.
+- The `github-token.txt` PAT is part of the server's `secrets/` directory (not visible in the delivered material).
+- Because the repo receives a push roughly every 15 minutes, direct edits on GitHub will collide with the server's next push.
 
 ---
 
