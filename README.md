@@ -82,15 +82,3 @@ What still needs to happen before we can productionize Tony.
 Practical how-tos for using Tony day-to-day.
 
 - [Emailing Tony](guides/emailing-tony.md) — for AV team members who want Tony to do something
-
----
-
-## A note on tone
-
-Where the language in these docs reads like correspondence — *"we should…"*, *"worth asking Matt about…"*, *"I suspect…"* — treat that as notes-in-progress. As questions get answered and assumptions get confirmed, the correspondence-style prose will firm up into stated fact.
-
-The `guides/` section is different: those pages are drawn only from confirmed sources and should read as evergreen reference from day one.
-
----
-
-_Maintained by the engineering contractor for Austin Visuals. Last structural update: 2026-04-20._
