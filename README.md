@@ -88,10 +88,6 @@ Plain-English summary of what I've figured out so far. The five things the clien
 
 ## 📋 Questions for Matt
 
-_(This section is worded as if I'm emailing Matt directly — easy to copy/paste when we have a conversation.)_
-
-Hi Matt — a few things I've been chewing on as I dig into the material you shared. Most of these can wait, but the first two I'd like to align on soon because they shape a lot of the other decisions.
-
 1. **Target OS for the VPS — can we go Linux?** Your handoff notes mention "Windows VPS, or Linux + Wine." I'd strongly steer us away from Wine: it emulates Windows inside Linux, which adds a whole class of compatibility bugs and defeats the reason to switch OS in the first place. The good news — OpenClaw itself is a Node.js package, which runs natively on Linux, and your own README notes reference "switch to the Linux launcher if preferred" and a `/opt/openclaw/workspace` install path. **Unless there's a Windows-only dependency I haven't spotted, Linux is cheaper, simpler, and the more production-ready choice.** Happy to default to Linux unless you have a reason to stick with Windows.
 
 2. **Scope of this engagement.** Is this a pure lift-and-shift from your laptop to a VPS, or are we also closing gaps in what Tony can do today? The skill test matrix in the snapshot (`reports/bot_skill_test_matrix.md`) lists several "Blocked" capabilities — Dropbox file transfer, voiceover/music/sound-effect email handlers, Kling video, "MAKE FORMAL" drafting. If those are part of the job I'd like to plan for them.
@@ -102,7 +98,7 @@ Hi Matt — a few things I've been chewing on as I dig into the material you sha
 
 5. **Fresh workspace snapshot.** The zip from 2026-04-01 is about three weeks stale and the live output has moved a lot since. Could you regenerate a fresh sanitized snapshot from your laptop before I start setting up the VPS? Same exclusions as before — no `.openclaw/secrets/`, no `memory/`.
 
-6. **The other developer.** The `README.txt` inside the Dropbox bundle was addressed to a different developer (I'm guessing the Pakistani contractor who's been slow to respond). Are they still involved, or am I taking over this workstream entirely? Want to make sure we're not duplicating or conflicting.
+6. **The other developer.** The `README.txt` inside the Dropbox bundle was addressed to a different developer. Are they still involved, or am I taking over this workstream entirely? Want to make sure we're not duplicating or conflicting.
 
 7. **The 42-document SOP corpus.** The processes playbook in the snapshot references 42 documents but only 15 were ingested. Can I get view access to the remaining 27 DOCX files in your Google Drive? Understanding the full business context will help me figure out where Tony needs to grow.
 
@@ -145,15 +141,3 @@ What still needs to happen before we can productionize Tony.
 Practical how-tos for using Tony day-to-day.
 
 - [Emailing Tony](guides/emailing-tony.md) — for AV team members who want Tony to do something
-
----
-
-## A note on tone
-
-Where the language in these docs reads like correspondence — *"we should…"*, *"worth asking Matt about…"*, *"I suspect…"* — treat that as notes-in-progress. As questions get answered and assumptions get confirmed, the correspondence-style prose will firm up into stated fact.
-
-The `guides/` section is different: those pages are drawn only from confirmed sources and should read as evergreen reference from day one.
-
----
-
-_Maintained by the engineering contractor for Austin Visuals. Last structural update: 2026-04-20._
