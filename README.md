@@ -108,7 +108,3 @@ Practical how-tos for using Tony day-to-day.
 ## Live document
 
 This is a working inventory; sections will be revised as open questions are answered. The `guides/` section is drawn from confirmed sources and intended as stable reference.
-
----
-
-_Maintained by the engineering contractor for Austin Visuals. Last structural update: 2026-04-21._
