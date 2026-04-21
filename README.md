@@ -11,6 +11,65 @@ Tony is a real thing Matt built (on top of a framework called **OpenClaw**) that
 
 ---
 
+## 🖼️ The big picture
+
+If you remember one thing about Tony, remember this diagram. Everything else is detail.
+
+```mermaid
+flowchart LR
+    TEAM["👥 AV Team<br/>Nancy · David · Tom<br/>Adam · Peter · Che"]
+
+    TONY["🤖 Tony<br/>AI assistant<br/>runs on Matt's laptop today"]
+
+    SVCS["🔧 Services Tony uses<br/>📦 Dropbox · 📧 Gmail<br/>📄 Google Drive · 💰 QuickBooks<br/>🎬 AI video &amp; voice tools"]
+
+    SITE["🌐 Dashboard website<br/>therealsparks.github.io/tony<br/>projects · invoices · analytics"]
+
+    MATT["👔 Matt"]
+
+    TEAM <-->|"email requests<br/>&amp; confirmations"| TONY
+    TONY <-->|"does the work"| SVCS
+    TONY -->|"publishes updates"| SITE
+    SITE --> MATT
+    SITE --> TEAM
+```
+
+**How to read it:**
+
+- **The team talks to Tony by email.** That's it — no app to log into. Send an email to `tony@austinvisuals.com` with a specific subject line and he does the thing. (See [Emailing Tony](guides/emailing-tony.md) for the list of commands.)
+- **Tony does the actual work through the services on the right.** He has logins to Dropbox, Gmail, Google Drive, QuickBooks, and various AI tools. When an email asks him to file a client upload, he puts it in Dropbox. When it asks him to generate a video, he calls the AI service.
+- **Tony publishes dashboards as a website.** Not a chat app, not a PDF — a live website anyone on the team can bookmark. Projects, invoices, analytics, health status.
+- **Everything currently depends on Matt's laptop being on.** That's why we're here — see below.
+
+---
+
+## 🏗️ Today vs. after the migration
+
+The whole point of this engagement is captured in these two boxes:
+
+```mermaid
+flowchart LR
+    subgraph before["❌ TODAY"]
+        direction TB
+        LAPTOP["🖥️ Matt's laptop"]
+        NOTE1["⚠️ If the laptop is off,<br/>asleep, offline, or broken:<br/>Tony is offline too"]
+        LAPTOP --> NOTE1
+    end
+
+    subgraph after["✅ AFTER MIGRATION"]
+        direction TB
+        VPS["☁️ Server (VPS)<br/>always on, always available"]
+        NOTE2["✅ Tony is always available<br/>for the whole team,<br/>regardless of laptop status"]
+        VPS --> NOTE2
+    end
+
+    before ==>|"what this<br/>engagement accomplishes"| after
+```
+
+Tony is powerful but fragile right now — he's essentially an employee who only shows up when one specific laptop is awake. Moving him to a server (a "VPS") turns him into a real piece of infrastructure the whole team can depend on 24/7.
+
+---
+
 ## 🔑 Key findings (read this first)
 
 Plain-English summary of what I've figured out so far. The five things the client and I both need to know before moving forward:

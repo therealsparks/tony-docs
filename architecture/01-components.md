@@ -10,7 +10,7 @@ flowchart LR
         direction TB
         CL["ClawLauncher.exe<br/>(Go GUI on :54321)"]
         RT["myclaw/<br/>OpenClaw runtime<br/>Node 24 + llama.cpp"]
-        WS["📁 .openclaw/workspace/<br/><b>= TonyWorkspace on disk</b><br/>AGENTS · SOUL · USER ·<br/>175 scripts · 3 skills · data"]
+        WS["📁 .openclaw/workspace/<br/>= TonyWorkspace on disk<br/>AGENTS · SOUL · USER ·<br/>175 scripts · 3 skills · data"]
         SEC[🔑 .openclaw/secrets/<br/>Dropbox · Gmail · QBO<br/>GitHub PAT · GA4 · AI keys]
         CRON["⏱️ Windows Task Scheduler<br/>heartbeat every 15 min<br/>QBO sync · watchdogs"]
         MEM[(🧠 memory/<br/>runtime state)]
