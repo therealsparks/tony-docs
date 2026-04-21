@@ -5,10 +5,10 @@
 The system is split into two halves: a **backend** (the server where Tony runs) and a **frontend** (the dashboard site users visit). The backend integrates with external services to do its work; the frontend is simply the published output.
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph backend["Backend (server)"]
         RT["OpenClaw Runtime"]
-        CRON["Scheduled Tasks\nheartbeat · QBO sync · watchdogs"]
+        CRON["Scheduled Tasks"]
         WS["Workspace\nscripts · skills · data"]
         SEC["secrets/"]
         MEM[("memory/")]
@@ -28,12 +28,7 @@ flowchart TB
         WP["WordPress"]
     end
 
-    subgraph publish["GitHub"]
-        REPO["therealsparks/tony"]
-        FRONTEND["Frontend\ntony.austinvisuals.com"]
-        REPO --> FRONTEND
-    end
-
+    FRONTEND["Frontend\ntony.austinvisuals.com"]
     USERS["Users"]
 
     WS <-->|OAuth| GM
@@ -44,9 +39,8 @@ flowchart TB
     WS -->|generate| AI
     WS -->|REST| WP
 
-    WS -->|git push| REPO
+    WS -->|deploys| FRONTEND
     FRONTEND --> USERS
-    USERS -->|email| GM
 
     classDef missing fill:#fee,stroke:#c33,stroke-dasharray:5 5
     class SEC,MEM missing
