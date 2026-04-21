@@ -1,46 +1,47 @@
-# 2. Publish loop — how dashboards stay fresh
+# 2. Publish loop
 
 [← architecture index](README.md) · [← docs home](../README.md)
 
-Every ~15 minutes a scheduled task on the server fires a **heartbeat** commit. Separately, whenever Tony processes an event (inbound email, scheduled sync, upload), a `deploy_*.py` script regenerates the affected HTML and JSON and pushes them. These two mechanisms account for the 7,000+ commits on the repo since 2026-03-21.
+Two independent processes keep the frontend current: a **heartbeat** that runs every ~15 minutes, and **content updates** that fire whenever Tony processes real work. Together they account for the 7,000+ commits on the repo since March 2026.
 
 ```mermaid
 sequenceDiagram
-    participant C as ⏱️ Scheduled task
-    participant T as 🤖 Tony<br/>(OpenClaw runtime)
-    participant W as 📁 Workspace<br/>scripts + data
-    participant G as 🐙 GitHub<br/>therealsparks/tony
-    participant P as 🌐 Pages<br/>therealsparks.github.io/tony
-    participant M as 👤 Matt
+    participant C as Scheduler
+    participant T as Tony
+    participant W as Workspace
+    participant G as GitHub
+    participant P as Frontend
 
     rect rgb(240, 248, 255)
-    Note over C,G: Heartbeat loop — every ~15 min
+    Note over C,G: Heartbeat — every ~15 min
     C->>T: trigger heartbeat
-    T->>W: write status.json (last_seen, known_issues)
-    W->>G: git commit -m "Status heartbeat <ts>Z" & push
+    T->>W: write status.json
+    W->>G: git push
     end
 
     rect rgb(245, 255, 245)
-    Note over T,P: Content update loop — on demand
-    T->>W: run deploy_analytics.py<br/>(or deploy_status_page.py, deploy_other_pages.py...)
-    W->>W: regenerate *.html + *.json from sources<br/>(GA4 pull, projects.json, QBO snapshot)
-    W->>G: git commit -m "Update X" & push
-    G->>P: GitHub Pages redeploys
-    P->>M: Matt sees fresh dashboard
+    Note over T,P: Content update — on demand
+    T->>W: run deploy script
+    W->>W: regenerate HTML + JSON
+    W->>G: git push
+    G->>P: redeploy
+    Note over P: tony.austinvisuals.com updated
     end
 ```
 
-## Two independent rhythms
+## Heartbeat (blue)
 
-**Heartbeat (blue).** Liveness signal. Every ~15 minutes a scheduled task writes the current timestamp and known issues into `status.json`, commits, and pushes. Missing heartbeats indicate a stalled runtime or host. [therealsparks.github.io/tony/status-page.html](https://therealsparks.github.io/tony/status-page.html) renders the most recent heartbeat as a "last seen" time.
+Liveness signal. Every ~15 minutes the scheduler triggers a heartbeat: Tony writes the current timestamp and any known issues to `status.json`, commits, and pushes. A missing heartbeat means the runtime or host has stalled. The status page at `tony.austinvisuals.com/status-page.html` shows the last heartbeat time.
 
-**Content updates (green).** Emitted when a handler or scheduled job changes state. QuickBooks syncs regenerate `invoices.html`; GA4 pulls regenerate `analytics.html`; new-project emails update `projects.json` and regenerate `project-status.html`. Each path has its own `deploy_*.py` script (roughly half a dozen total).
+## Content updates (green)
+
+Triggered whenever a handler or scheduled job changes state — a QuickBooks sync regenerates `invoices.html`, a GA4 pull regenerates `analytics.html`, a new-project email updates `projects.json`. Each has its own `deploy_*.py` script in the workspace.
 
 ## Notes
 
-- No CI/CD on the GitHub side (no Actions, no hooks). All publish activity is driven by the server's push.
-- The `github-token.txt` PAT is part of the server's `secrets/` directory (not visible in the delivered material).
-- Because the repo receives a push roughly every 15 minutes, direct edits on GitHub will collide with the server's next push.
+- No CI/CD on the GitHub side (no Actions, no hooks). All publish activity is server-driven.
+- The GitHub PAT used for pushing lives in the server's `secrets/` directory.
+- Direct edits on GitHub will be overwritten by the next server push.
 
 ---
 

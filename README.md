@@ -23,7 +23,7 @@ flowchart LR
 
     SVCS["🔧 Services Tony uses<br/>📦 Dropbox · 📧 Gmail<br/>📄 Google Drive · 💰 QuickBooks<br/>🎬 AI video &amp; voice tools"]
 
-    SITE["🌐 Dashboard website<br/>therealsparks.github.io/tony<br/>projects · invoices · analytics"]
+    SITE["🌐 Frontend<br/>tony.austinvisuals.com"]
 
     MATT["👔 Matt"]
 

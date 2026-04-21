@@ -64,12 +64,12 @@ Each row below is confirmed working (✅ Pass) in the internal test matrix.
 
 These aren't email commands — they're just URLs you can bookmark:
 
-- [**Project status**](https://therealsparks.github.io/tony/project-status.html) — every active and prospect project with assignees and progress
-- [**Analytics**](https://therealsparks.github.io/tony/analytics.html) — website traffic from GA4
-- [**Invoices**](https://therealsparks.github.io/tony/invoices.html) — QuickBooks invoice snapshot
-- [**Competitor brief**](https://therealsparks.github.io/tony/competitor-brief.html) — daily competitor intel
-- [**Status page**](https://therealsparks.github.io/tony/status-page.html) — Tony's own health and known issues
-- [**Tony commands**](https://therealsparks.github.io/tony/tony-commands.html) — Tony's own command summary
+- [**Project status**](https://tony.austinvisuals.com/project-status.html) — every active and prospect project with assignees and progress
+- [**Analytics**](https://tony.austinvisuals.com/analytics.html) — website traffic from GA4
+- [**Invoices**](https://tony.austinvisuals.com/invoices.html) — QuickBooks invoice snapshot
+- [**Competitor brief**](https://tony.austinvisuals.com/competitor-brief.html) — daily competitor intel
+- [**Status page**](https://tony.austinvisuals.com/status-page.html) — Tony's own health and known issues
+- [**Tony commands**](https://tony.austinvisuals.com/tony-commands.html) — Tony's own command summary
 
 ---
 

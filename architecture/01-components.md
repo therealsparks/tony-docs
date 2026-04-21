@@ -1,35 +1,40 @@
-# 1. Components — what talks to what
+# 1. Components
 
 [← architecture index](README.md) · [← docs home](../README.md)
 
-Components are grouped into three domains: the host server (runtime, workspace, scheduled tasks), external services the system integrates with, and the GitHub publish target.
+The system is split into two halves: a **backend** (the server where Tony runs) and a **frontend** (the dashboard site users visit). The backend integrates with external services to do its work; the frontend is simply the published output.
 
 ```mermaid
-flowchart LR
-    subgraph host["🖥️ Where Tony runs (server)"]
-        direction TB
-        RT["OpenClaw runtime<br/>Node 24 + llama.cpp"]
-        WS["📁 workspace/<br/>AGENTS · SOUL · USER ·<br/>scripts · skills · data"]
-        SEC[🔑 secrets/<br/>Dropbox · Gmail · QBO<br/>GitHub PAT · GA4 · AI keys]
-        CRON["⏱️ scheduled tasks<br/>heartbeat every 15 min<br/>QBO sync · watchdogs"]
-        MEM[(🧠 memory/<br/>runtime state)]
+flowchart TB
+    subgraph backend["Backend (server)"]
+        RT["OpenClaw Runtime"]
+        CRON["Scheduled Tasks\nheartbeat · QBO sync · watchdogs"]
+        WS["Workspace\nscripts · skills · data"]
+        SEC["secrets/"]
+        MEM[("memory/")]
 
-        RT --> WS
-        WS <-.reads.-> SEC
-        WS <--> MEM
-        CRON -->|triggers scripts| WS
+        RT & CRON --> WS
+        WS <-.-> SEC
+        WS <-.-> MEM
     end
 
-    subgraph ext["☁️ External services Tony integrates with"]
-        direction TB
-        GM["📧 Gmail<br/>tony@ · bot@ · matt@"]
-        DB["📦 Dropbox<br/>info@austinvisuals.com"]
-        GOOG["📄 Google Drive / Docs / Sheets"]
-        QBO["💰 QuickBooks Online"]
-        GA[📊 GA4 Analytics]
-        AI["🤖 AI APIs<br/>Anthropic · Vertex Veo<br/>Replicate · ElevenLabs"]
-        WP["🌐 WordPress<br/>austinvisuals.com"]
+    subgraph ext["External Services"]
+        GM["Gmail"]
+        DB["Dropbox"]
+        GOOG["Google Drive / Sheets"]
+        QBO["QuickBooks"]
+        GA["GA4"]
+        AI["AI APIs"]
+        WP["WordPress"]
     end
+
+    subgraph publish["GitHub"]
+        REPO["therealsparks/tony"]
+        FRONTEND["Frontend\ntony.austinvisuals.com"]
+        REPO --> FRONTEND
+    end
+
+    USERS["Users"]
 
     WS <-->|OAuth| GM
     WS <-->|API| DB
@@ -39,38 +44,25 @@ flowchart LR
     WS -->|generate| AI
     WS -->|REST| WP
 
-    WS -->|"git push<br/>(deploy_*.py)"| REPO
-
-    subgraph github["🐙 GitHub"]
-        REPO["therealsparks/tony repo<br/>(7,473 commits)"]
-        PAGES["GitHub Pages →<br/>therealsparks.github.io/tony/"]
-        REPO --> PAGES
-    end
-
-    subgraph humans["👥 Consumers"]
-        MATT["Matt<br/>views dashboards"]
-        TEAM["AV team<br/>nancy · david · tom<br/>adam · peter · che"]
-    end
-
-    PAGES -->|dashboards| MATT
-    TEAM -->|email commands| GM
-    GM -->|confirmations| TEAM
+    WS -->|git push| REPO
+    FRONTEND --> USERS
+    USERS -->|email| GM
 
     classDef missing fill:#fee,stroke:#c33,stroke-dasharray:5 5
     class SEC,MEM missing
 ```
 
-> **🔴 Red-dashed boxes = not visible in the delivered material.** `secrets/` and `memory/` live on the server and were not included in the bundles shared to date.
+> **Red-dashed boxes** — `secrets/` and `memory/` live on the server and were not included in the delivered material.
 
 ## Components
 
-- **OpenClaw runtime** — The Node.js runtime. Installs the `openclaw` package, `node-llama-cpp`, and SDKs for each integrated service.
-- **Workspace** — Source directory loaded each session: identity and policy files, automation scripts, skills, and reference data.
-- **Secrets** — Credentials, kept separate from the workspace so the workspace can be shared without leaking keys. Not included in the delivered material.
-- **Memory** — Between-session state. Regenerates automatically.
-- **Scheduled tasks** — The host's job scheduler (cron, systemd timers, or Windows Task Scheduler — not determined from the delivered material). Runs the 15-minute heartbeat, QuickBooks sync, and watchdogs.
-- **External services** — Seven external integrations, accessed via OAuth tokens or service-account keys.
-- **GitHub repo + Pages** — The publish target. HTML and JSON dashboards are pushed to `therealsparks/tony` and served by GitHub Pages.
+- **OpenClaw Runtime** — The Node.js process Tony runs in. Loads the workspace on startup and handles each session.
+- **Scheduled Tasks** — The host's job scheduler. Fires the 15-minute heartbeat, QuickBooks sync, and watchdog processes.
+- **Workspace** — The source directory: identity/policy files, 175 automation scripts, 3 skills, and reference data.
+- **Secrets** — API credentials and OAuth tokens, kept separate from the workspace. Not in the delivered material.
+- **Memory** — Between-session state. Managed by the runtime automatically.
+- **External Services** — Seven integrations the workspace scripts call via OAuth or API keys.
+- **Frontend** — HTML and JSON dashboards pushed to `therealsparks/tony` and served at `tony.austinvisuals.com`.
 
 ---
 

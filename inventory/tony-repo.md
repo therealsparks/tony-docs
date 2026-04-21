@@ -3,7 +3,7 @@
 [← docs home](../README.md)
 
 - **Remote:** `https://github.com/therealsparks/tony.git` (private, pushed to `origin/main`)
-- **Live site:** **https://therealsparks.github.io/tony/** (confirmed from `directory.html`)
+- **Live site:** **tony.austinvisuals.com** (confirmed from `directory.html`)
 - **Owner on GitHub:** `therealsparks` (Matt's GitHub handle)
 - **Status:** actively in use. The server pushes a heartbeat commit roughly every 15 minutes, plus content updates whenever dashboards change.
 
