@@ -105,7 +105,7 @@ Practical how-tos for using Tony day-to-day.
 
 ---
 
-## A note on tone
+## Live document
 
 This is a working inventory; sections will be revised as open questions are answered. The `guides/` section is drawn from confirmed sources and intended as stable reference.
 
