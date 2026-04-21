@@ -2,11 +2,11 @@
 
 [← docs home](../README.md)
 
-Purpose: a sanitized copy of `C:\Users\matthewwinters\.openclaw\workspace` as of **2026-04-01**. This is the actual content Tony operates on — identity files, dashboards, automation scripts, skills, and data. Secrets were intentionally stripped.
+**Historical reference.** A sanitized copy of Matt's laptop workspace at `C:\Users\matthewwinters\.openclaw\workspace`, frozen on **2026-04-01** and shared with the contractor pre-migration. This is what Tony's source code looked like as of that date — identity files, dashboards, automation scripts, skills, and data. Secrets and `memory/` were intentionally stripped.
+
+Since Tony now runs on a server (not the laptop), this snapshot is no longer a mirror of what's actually running. Tony's live source may have evolved in the weeks since. Treat this file as useful *architectural* reference, not *current-state* ground truth.
 
 **Delivered as:** `TonyWorkspace-2026-04-01.zip` (~62 MB compressed, ~246 MB unzipped) via a Dropbox link in the onboarding spreadsheet.
-
-> **⚠️ Already stale.** Frozen 2026-04-01; today is 2026-04-20. The publish repo (see [tony-repo.md](tony-repo.md)) has moved ~7,000 commits since. Useful reference, not ground truth. Plan to request a fresh snapshot before doing real work. See [Questions for Matt #5](../README.md#-questions-for-matt).
 
 ## Top-level identity + policy files
 
@@ -41,7 +41,7 @@ The operational heart of Tony. Roughly organized by integration:
 - **Dropbox:** `dropbox_*.py`, `upload_dropbox.py`, `email_upload_handler.py`, `cc_scan_handler.py` (CC/BCC passive filing)
 - **Gmail:** `gmail_*.py` (OAuth, POP, send/read for `bot@` and `tony@` mailboxes), `gmail_bot_utils.py`
 - **Google Drive / Docs / Sheets:** `drive_*.py`, `backup_to_drive.py`, `share_sheet.py`, `inspect_sheet*.py`
-- **QuickBooks:** `qbo_fetch_invoices.py`, `run_qbo_sync.ps1` (registered as `TonyQuickBooksSync` Task Scheduler job on the laptop)
+- **QuickBooks:** `qbo_fetch_invoices.py`, `run_qbo_sync.ps1` (was registered as `TonyQuickBooksSync` Task Scheduler job on Matt's laptop at snapshot time)
 - **Deploy (GitHub Pages):** `deploy_github.py`, `deploy_analytics.py`, `deploy_status_page.py`, `deploy_other_pages.py`, `deploy_page.py`, `deploy_tasks_personal.py`
 - **AI media:** `veo_*.py` / `test_vertex_veo.py` (Google Veo video gen), `replicate_*.py`, `test_elevenlabs*.py`, `tts_send.py`, `voice_sampler.py`
 - **Project registry:** `project_registry.py`, `seed_projects.py`, client onboarding scripts (`add_*.py`, `onboard_*.py`)

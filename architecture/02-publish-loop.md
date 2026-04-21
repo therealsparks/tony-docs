@@ -2,11 +2,11 @@
 
 [← architecture index](README.md) · [← docs home](../README.md)
 
-Every ~15 minutes a cron job on Matt's laptop fires a **heartbeat**. Separately, whenever Tony actually does something (gets an email, runs a sync, processes an upload), a `deploy_*.py` script regenerates the affected HTML/JSON and pushes it. This is why the `tony` repo has 7,000+ commits in a month.
+Every ~15 minutes a scheduled task on the server fires a **heartbeat**. Separately, whenever Tony actually does something (gets an email, runs a sync, processes an upload), a `deploy_*.py` script regenerates the affected HTML/JSON and pushes it. This is why the `tony` repo has accumulated 7,000+ commits since it started.
 
 ```mermaid
 sequenceDiagram
-    participant C as ⏱️ Cron<br/>(Task Scheduler)
+    participant C as ⏱️ Scheduled task
     participant T as 🤖 Tony<br/>(OpenClaw runtime)
     participant W as 📁 Workspace<br/>scripts + data
     participant G as 🐙 GitHub<br/>therealsparks/tony
@@ -32,15 +32,15 @@ sequenceDiagram
 
 ## Two independent rhythms
 
-**Heartbeat (blue).** A "Tony is alive" signal. Every ~15 minutes a Windows scheduled task runs a small job that writes the current timestamp and known issues into `status.json`, commits it, and pushes. If heartbeats stop arriving in the repo, something is wrong with Tony (or with Matt's laptop). This is also what makes [therealsparks.github.io/tony/status-page.html](https://therealsparks.github.io/tony/status-page.html) show a "last seen" time.
+**Heartbeat (blue).** A "Tony is alive" signal. Every ~15 minutes a scheduled task on the server runs a small job that writes the current timestamp and known issues into `status.json`, commits it, and pushes. If heartbeats stop arriving in the repo, something is wrong with Tony (or with the server he runs on). This is also what makes [therealsparks.github.io/tony/status-page.html](https://therealsparks.github.io/tony/status-page.html) show a "last seen" time.
 
 **Content updates (green).** Happen whenever Tony does real work. The QuickBooks syncer pulls invoices → regenerates `invoices.html` → pushes. A GA4 pull → regenerates `analytics.html` → pushes. A new project email → updates `projects.json` → regenerates `project-status.html` → pushes. Each of these is a separate `deploy_*.py` script (there are about half a dozen of them).
 
-## Why this matters for the migration
+## Observations about this pattern
 
-- The heartbeat must move from Matt's laptop to the VPS. Both machines pushing at once = merge conflicts on every cycle.
-- The `github-token.txt` (GitHub Personal Access Token) Tony uses to push is a credential we'll need on the VPS. See [migration/missing-pieces.md](../migration/missing-pieces.md).
-- There's no CI/CD — everything is driven from the pushing machine. That's a feature for now (simple) but could be improved post-migration (e.g. replace some deploy scripts with GitHub Actions).
+- The publish flow is simple and self-contained: there's no CI/CD on the GitHub side (no Actions, no hooks). Everything is driven from the server that pushes.
+- The `github-token.txt` PAT is part of the server's `secrets/` directory (not visible to the contractor).
+- Because the repo receives a push roughly every 15 minutes, anyone editing the repo directly on GitHub would likely collide with the server's next push.
 
 ---
 

@@ -4,10 +4,12 @@ Central documentation hub for **Tony**, the AI assistant used at Austin Visuals.
 
 ## Who this is for
 
-- **Right now:** Matt (founder of Austin Visuals) and the contractor onboarding to help productionize Tony.
+- **Right now:** Matt (founder of Austin Visuals) and the contractor taking inventory of the system.
 - **Over time:** anyone on the AV team who needs to understand Tony, talk to him effectively, or extend what he does.
 
-Tony is a real thing Matt built (on top of a framework called **OpenClaw**) that runs on his laptop today. He handles email-driven work for the team — filing client uploads to Dropbox, tracking projects, generating AI videos, publishing dashboards — and he's about to move off the laptop onto a server so the rest of the team can rely on him.
+Tony is a real thing Matt built on top of a framework called **OpenClaw**. He handles email-driven work for the team — filing client uploads to Dropbox, tracking projects, generating AI videos, publishing dashboards — and runs on a server Matt operates.
+
+This doc describes the moving parts, how they connect, and where each piece of information lives. It's an inventory, not a proposal.
 
 ---
 
@@ -19,7 +21,7 @@ If you remember one thing about Tony, remember this diagram. Everything else is 
 flowchart LR
     TEAM["👥 AV Team<br/>Nancy · David · Tom<br/>Adam · Peter · Che"]
 
-    TONY["🤖 Tony<br/>AI assistant<br/>runs on Matt's laptop today"]
+    TONY["🤖 Tony<br/>AI assistant<br/>runs on a server"]
 
     SVCS["🔧 Services Tony uses<br/>📦 Dropbox · 📧 Gmail<br/>📄 Google Drive · 💰 QuickBooks<br/>🎬 AI video &amp; voice tools"]
 
@@ -39,74 +41,42 @@ flowchart LR
 - **The team talks to Tony by email.** That's it — no app to log into. Send an email to `tony@austinvisuals.com` with a specific subject line and he does the thing. (See [Emailing Tony](guides/emailing-tony.md) for the list of commands.)
 - **Tony does the actual work through the services on the right.** He has logins to Dropbox, Gmail, Google Drive, QuickBooks, and various AI tools. When an email asks him to file a client upload, he puts it in Dropbox. When it asks him to generate a video, he calls the AI service.
 - **Tony publishes dashboards as a website.** Not a chat app, not a PDF — a live website anyone on the team can bookmark. Projects, invoices, analytics, health status.
-- **Everything currently depends on Matt's laptop being on.** That's why we're here — see below.
 
 ---
 
-## 🏗️ Today vs. after the migration
+## 🔑 Key observations
 
-The whole point of this engagement is captured in these two boxes:
+Summary of what's true about Tony today, based on what's directly visible from the GitHub repo and the files in dropbox that were shared with Niaz.
 
-```mermaid
-flowchart LR
-    subgraph before["❌ TODAY"]
-        direction TB
-        LAPTOP["🖥️ Matt's laptop"]
-        NOTE1["⚠️ If the laptop is off,<br/>asleep, offline, or broken:<br/>Tony is offline too"]
-        LAPTOP --> NOTE1
-    end
+1. **The GitHub repo `therealsparks/tony` is Tony's *published output*, not his source code.** Tony runs on a server, generates HTML/JSON dashboards, and pushes them to this repo. GitHub Pages serves them at [therealsparks.github.io/tony](https://therealsparks.github.io/tony/). The repo itself doesn't contain Tony's "brain" — that lives in a workspace directory on the server.
 
-    subgraph after["✅ AFTER MIGRATION"]
-        direction TB
-        VPS["☁️ Server (VPS)<br/>always on, always available"]
-        NOTE2["✅ Tony is always available<br/>for the whole team,<br/>regardless of laptop status"]
-        VPS --> NOTE2
-    end
+2. **The repo is actively written to every ~15 minutes.** A heartbeat job on the server rewrites `status.json` and pushes. Content-update pushes happen on top of that whenever Tony does real work (syncs QuickBooks, pulls GA4, processes an email, etc.). 7,400+ commits since 2026-03-21 — see [inventory/tony-repo.md](inventory/tony-repo.md).
 
-    before ==>|"what this<br/>engagement accomplishes"| after
-```
+3. **Tony's source code isn't in a repo the contractor has seen.** The only source we have direct visibility into is the pre-migration `TonyWorkspace-2026-04-01.zip` snapshot (175 scripts, identity files, 3 AgentSkills). That snapshot is a historical artifact — Tony has been running on the server for weeks, so the live source may have evolved since the snapshot was cut.
 
-Tony is powerful but fragile right now — he's essentially an employee who only shows up when one specific laptop is awake. Moving him to a server (a "VPS") turns him into a real piece of infrastructure the whole team can depend on 24/7.
+4. **The delivered bundles are pre-migration artifacts.** `ClawLauncher-Windows.zip` and `TonyWorkspace-2026-04-01.zip` describe Tony as he ran on Matt's laptop before the migration. They're useful reference for understanding the architecture — not a mirror of the live system.
 
----
-
-## 🔑 Key findings (read this first)
-
-Plain-English summary of what I've figured out so far. The five things the client and I both need to know before moving forward:
-
-1. **The GitHub repo I found and invited myself to (`therealsparks/tony`) is Tony's *output*, not his source code.** Think of it like a website builder publishing to a hosting account: Tony runs on Matt's laptop, generates dashboards, and pushes them to GitHub so they can be viewed at [therealsparks.github.io/tony](https://therealsparks.github.io/tony/). The repo itself doesn't contain Tony's "brain" — that lives in the workspace folder on Matt's laptop.
-
-2. **⚠️ Matt said the `tony` repo "isn't in use." That is not accurate.** The repo is being written to every ~15 minutes right now, by Tony running on Matt's laptop. If we change things there without coordinating, we'll collide with his laptop's push loop and either break the live dashboards or overwrite our own changes. See [inventory/tony-repo.md](inventory/tony-repo.md) for the evidence (7,473 commits since 2026-03-21, with fresh ones arriving as I write this).
-
-3. **Tony's actual source code is NOT in git anywhere.** The 175 scripts, the identity files (`AGENTS.md` / `SOUL.md` / `USER.md`), the three AgentSkills — the stuff that makes Tony *Tony* — live only as files on Matt's laptop. That's fragile: no version history, no rollback, no backup, no way for two people to collaborate on it. **We should stand up a second GitHub repo for the workspace itself** as an early step. The output repo is already in git; we just need the *source* to join it.
-
-4. **The snapshot in Dropbox (`TonyWorkspace-2026-04-01.zip`) is already stale.** It was frozen on 2026-04-01; today is 2026-04-20. In that window, Tony's output repo has moved roughly **7,000 commits forward** — so the zip is a useful starting point, but not ground truth. Before we build anything on the VPS, we should ask Matt for a fresh sanitized snapshot from his laptop.
-
-5. **The laptop is currently a single point of failure.** There's no CI/CD, no GitHub Actions, no automation on the server side — everything happens on Matt's laptop and pushes up. If his laptop is off, offline, or broken, Tony is offline. Migrating to a VPS fixes this, but we have to carefully hand the "heartbeat" cron job from his laptop to the server without leaving them both pushing at once.
+5. **Our view of Tony is indirect.** We see him through the publish repo (his output) and the historical bundles (his pre-migration source). We don't currently have direct access to the running server or its `memory/` and `secrets/` folders.
 
 ---
 
 ## 📋 Questions for Matt
 
-1. **Target OS for the VPS — can we go Linux?** Your handoff notes mention "Windows VPS, or Linux + Wine." I'd strongly steer us away from Wine: it emulates Windows inside Linux, which adds a whole class of compatibility bugs and defeats the reason to switch OS in the first place. The good news — OpenClaw itself is a Node.js package, which runs natively on Linux, and your own README notes reference "switch to the Linux launcher if preferred" and a `/opt/openclaw/workspace` install path. **Unless there's a Windows-only dependency I haven't spotted, Linux is cheaper, simpler, and the more production-ready choice.** Happy to default to Linux unless you have a reason to stick with Windows.
+_(This section is worded as if speaking to Matt directly — easy to copy/paste for a conversation.)_
 
-2. **Scope of this engagement.** Is this a pure lift-and-shift from your laptop to a VPS, or are we also closing gaps in what Tony can do today? The skill test matrix in the snapshot (`reports/bot_skill_test_matrix.md`) lists several "Blocked" capabilities — Dropbox file transfer, voiceover/music/sound-effect email handlers, Kling video, "MAKE FORMAL" drafting. If those are part of the job I'd like to plan for them.
+Hi Matt — a few things I'd still like to understand now that the migration is done:
 
-3. **The `tony` repo is very much in use.** You mentioned it wasn't — just want to make sure we're talking about the same repo (`https://github.com/therealsparks/tony`). It's receiving commits every ~15 minutes from what looks like your laptop's cron job. If that's intentional and I'm safe to ignore / not touch it, great. If it's unexpected, I'd like to dig in.
+1. **Access to the running system.** Can I get SSH or console access to the server Tony runs on? Being able to read the live source, logs, and config directly would speed up anything I need to look into. Right now my only windows into Tony are the publish repo and your old snapshot.
 
-4. **Source control for the workspace.** Tony's actual source code — the 175 scripts, his identity files, the skills — doesn't appear to be in git anywhere. I'd like to create a second repo (`austinvisuals/tony-workspace` or similar) so we have version history, backups, and a clean way to collaborate. Any objection?
+2. **Current source of truth for Tony's source code.** Is Tony's current workspace (scripts, skills, identity files) tracked in a repo I could pull from? If not, it'd be useful to have one — partly for backup, partly so we have a clean way to see what he's running today vs the April 1 snapshot I was given.
 
-5. **Fresh workspace snapshot.** The zip from 2026-04-01 is about three weeks stale and the live output has moved a lot since. Could you regenerate a fresh sanitized snapshot from your laptop before I start setting up the VPS? Same exclusions as before — no `.openclaw/secrets/`, no `memory/`.
+3. **The other developer.** The `README.txt` inside the Dropbox bundle was addressed to a different developer. Are they still involved, or am I taking over this workstream entirely? Just want to make sure we're not duplicating or conflicting.
 
-6. **The other developer.** The `README.txt` inside the Dropbox bundle was addressed to a different developer. Are they still involved, or am I taking over this workstream entirely? Want to make sure we're not duplicating or conflicting.
+4. **The 42-document SOP corpus.** The processes playbook in the snapshot references 42 documents but only 15 were ingested. Can I get view access to the remaining 27 DOCX files in your Google Drive? Understanding the full business context will help me figure out where Tony could grow.
 
-7. **The 42-document SOP corpus.** The processes playbook in the snapshot references 42 documents but only 15 were ingested. Can I get view access to the remaining 27 DOCX files in your Google Drive? Understanding the full business context will help me figure out where Tony needs to grow.
+5. **"Seven focus items" priority stack.** `docs/feature-backlog.md` in the publish repo mentions "Matt's seven current focus items." Can you share that list? Sounds like the roadmap for what Tony should tackle next.
 
-8. **"Seven focus items" priority stack.** `docs/feature-backlog.md` in the publish repo mentions "Matt's seven current focus items for the upcoming VPS build." Can you share that list? Sounds like the scope doc for this engagement.
-
-9. **`site/` vs `site-deploy/` folders in the publish repo.** Both contain the same 4 files. Is one of them legacy / deprecated, or is this a staging flow I should preserve?
-
-10. **Secrets transfer.** Eventually I'll need credentials to stand Tony up on a VPS: Dropbox API token, Gmail OAuth for `bot@` / `tony@`, Google service-account JSON, QuickBooks OAuth, GitHub PAT for the publish repo, ElevenLabs / Replicate / Vertex AI / GA4 keys. No rush — we should discuss a secure handoff method (1Password, encrypted file, fresh tokens) before you send anything.
+6. **`site/` vs `site-deploy/` folders in the publish repo.** Both contain the same 4 files. Is one of them legacy / deprecated, or is this a staging flow worth preserving?
 
 ---
 
@@ -114,30 +84,35 @@ Plain-English summary of what I've figured out so far. The five things the clien
 
 ### Architecture
 
-How all the pieces fit together. Four diagrams walk through the system.
+How all the pieces fit together. Three diagrams walk through the system.
 
 - [Architecture overview](architecture/README.md) — start here
 - [1. Components — what talks to what](architecture/01-components.md)
 - [2. Publish loop — how dashboards stay fresh](architecture/02-publish-loop.md)
 - [3. Command loop — how the team triggers actions](architecture/03-command-loop.md)
-- [4. VPS migration — target state + cutover gotchas](architecture/04-vps-migration.md)
 
 ### Inventory
 
-What exists today and where each piece came from.
+What exists in the delivered material and what each piece represents.
 
-- [ClawLauncher-Windows bundle](inventory/clawlauncher-windows.md) — the Windows runtime and its installers
-- [TonyWorkspace snapshot (2026-04-01)](inventory/tony-workspace.md) — Tony's "brain" files, frozen on April 1 ⚠️ stale
-- [tony repo (live publish target)](inventory/tony-repo.md) — the GitHub Pages site ⚠️ actively in use
-
-### Migration
-
-What still needs to happen before we can productionize Tony.
-
-- [Missing pieces](migration/missing-pieces.md) — what we still need from Matt
+- [ClawLauncher-Windows bundle](inventory/clawlauncher-windows.md) — historical Windows runtime bundle (pre-migration)
+- [TonyWorkspace snapshot (2026-04-01)](inventory/tony-workspace.md) — historical source snapshot (pre-migration)
+- [tony repo](inventory/tony-repo.md) — the live GitHub Pages publish target
 
 ### Guides
 
 Practical how-tos for using Tony day-to-day.
 
 - [Emailing Tony](guides/emailing-tony.md) — for AV team members who want Tony to do something
+
+---
+
+## A note on tone
+
+Where the language in these docs reads like correspondence — *"worth asking Matt about…"*, *"I suspect…"* — treat that as notes-in-progress. As questions get answered, the correspondence-style prose will firm up into stated fact.
+
+The `guides/` section is different: those pages are drawn only from confirmed sources and should read as evergreen reference.
+
+---
+
+_Maintained by the engineering contractor for Austin Visuals. Last structural update: 2026-04-21._

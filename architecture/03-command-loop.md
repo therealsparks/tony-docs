@@ -49,14 +49,14 @@ Per `reports/bot_skill_test_matrix.md` in the workspace snapshot, several comman
 - `Kling video — <Shot>` — CLI exists, no email glue
 - `MAKE FORMAL` / `PERSONALIZE NOTES` prefixes — advertised but no drafting pipeline
 
-These are either scope to close during migration, or things we should tell the team not to try yet.
+If the team needs these, they'd need to be built — don't advertise them as working.
 
-## Why this matters for the migration
+## Observations about this pattern
 
-- All of this glue is in the **workspace** (the 175 Python scripts in `scripts/`), not in the repo we can currently see on GitHub. Without the workspace, we have no command loop.
-- The whitelist lives in `data/bot_whitelist.json` — easy to extend, but a person has to edit the file and Tony has to restart (or reload) to see the change. Worth revisiting post-migration.
-- Gmail uses OAuth — we'll need fresh tokens on the VPS.
+- All of this glue lives in the **workspace** (the ~175 Python scripts in `scripts/`). The contractor has only seen the 2026-04-01 pre-migration snapshot of those scripts; the live server may have evolved them.
+- The whitelist lives in `data/bot_whitelist.json`. Extending it requires editing the file on the server and getting Tony to reload.
+- Gmail uses OAuth; those tokens live in the server's `secrets/` directory.
 
 ---
 
-**Prev:** [← Publish loop](02-publish-loop.md) · **Next:** [VPS migration →](04-vps-migration.md)
+**Prev:** [← Publish loop](02-publish-loop.md) · **Back to:** [Architecture index](README.md)
