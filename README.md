@@ -13,11 +13,11 @@ This doc describes the moving parts, how they connect, and where each piece of i
 
 ---
 
-## 🖼️ The big picture
+## 🗺️ System Overview
 
 ```mermaid
 flowchart LR
-    TEAM["👥 AV Team<br/>Nancy · David · Tom<br/>Adam · Peter · Che"]
+    TEAM["👥 AV Team"]
 
     TONY["🤖 Tony<br/>AI assistant<br/>runs on a server"]
 
@@ -44,17 +44,15 @@ flowchart LR
 
 ## 🔑 Key observations
 
-Summary of what's true about Tony today, based on what's directly visible from the GitHub repo and the files in dropbox that were shared with Niaz.
+1. **`therealsparks/tony` is a publish target, not source code.** The server generates HTML/JSON dashboards and pushes them here. Source lives on the server.
 
-1. **The GitHub repo `therealsparks/tony` contains Tony's *published output*, not the source code.** The server regenerates HTML and JSON dashboards and pushes them to this repo. GitHub Pages serves them at [therealsparks.github.io/tony](https://therealsparks.github.io/tony/). The source code lives in a workspace directory on the server, not in this repo.
+2. **The repo gets a heartbeat commit every ~15 minutes** — 7,400+ commits since March 21. Content pushes happen on top whenever Tony does real work.
 
-2. **The repo is actively written to every ~15 minutes.** A heartbeat job on the server rewrites `status.json` and pushes. Content-update pushes happen on top of that whenever Tony does real work (syncs QuickBooks, pulls GA4, processes an email, etc.). 7,400+ commits since 2026-03-21 — see [inventory/tony-repo.md](inventory/tony-repo.md).
+3. **No source repo was delivered.** The `TonyWorkspace-2026-04-01.zip` snapshot has 175 scripts and 3 skills, but it's a pre-migration artifact. The live server may have diverged.
 
-3. **Tony's source code is not in any repo visible in the delivered material.** The only source accessible is the pre-migration `TonyWorkspace-2026-04-01.zip` snapshot (175 scripts, identity files, 3 AgentSkills). That snapshot is a historical artifact; the live source on the server may have diverged in the weeks since.
+4. **Both delivered bundles are pre-migration.** They describe Tony as it ran on Matt's laptop. Useful for understanding the architecture; not a mirror of the live system.
 
-4. **The delivered bundles are pre-migration artifacts.** `ClawLauncher-Windows.zip` and `TonyWorkspace-2026-04-01.zip` describe Tony as it ran on Matt's laptop before the migration. Useful for understanding the architecture; not a mirror of the live system.
-
-5. **The system is visible only indirectly.** Observable surfaces are the publish repo (output) and the delivered bundles (pre-migration source). There is no direct access to the running server or to its `memory/` and `secrets/` folders.
+5. **The running system is only indirectly visible.** Observable surfaces: the publish repo (output) and the workspace snapshot (pre-migration source). No direct access to the server, its `memory/`, or `secrets/`.
 
 ---
 
