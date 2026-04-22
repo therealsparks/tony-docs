@@ -6,7 +6,15 @@ The system is split into two halves: a **backend** (the server where Tony runs) 
 
 ```mermaid
 flowchart LR
+    subgraph tools["Input & Storage"]
+        direction TB
+        GM["Gmail"]
+        DB["Dropbox"]
+        GOOG["Google Drive / Sheets"]
+    end
+
     subgraph backend["Backend (server)"]
+        direction TB
         RT["OpenClaw Runtime"]
         CRON["Scheduled Tasks"]
         WS["Workspace\nscripts · skills · data"]
@@ -18,32 +26,40 @@ flowchart LR
         WS <-.-> MEM
     end
 
-    subgraph ext["External Services"]
-        GM["Gmail"]
-        DB["Dropbox"]
-        GOOG["Google Drive / Sheets"]
+    subgraph services["Business & Output"]
+        direction TB
         QBO["QuickBooks"]
         GA["GA4"]
         AI["AI APIs"]
         WP["WordPress"]
     end
 
-    FRONTEND["Frontend\ntony.austinvisuals.com"]
-    USERS["Users"]
+    %% Left Side: External Input
+    USERS_IN["#128100;<br/>AV Team"] -->|Send/Sync| GM
 
-    WS <-->|OAuth| GM
-    WS <-->|API| DB
-    WS <-->|service acct| GOOG
+    %% Left Flank Connections
+    GM <-->|OAuth| WS
+    DB <-->|API| WS
+    GOOG <-->|service acct| WS
+
+    %% Right Flank Connections
     WS <-->|OAuth| QBO
     WS -->|pull| GA
     WS -->|generate| AI
     WS -->|REST| WP
 
-    WS -->|deploys| FRONTEND
-    FRONTEND --> USERS
+    %% Deployment Flow and Right Side Interaction
+    WS -->|deploys| FRONTEND["Frontend\ntony.austinvisuals.com"]
+    
+    USERS_OUT["#128100;<br/>AV Team"]
+    FRONTEND <-->|Interact| USERS_OUT
 
+    %% Class Definitions
     classDef missing fill:#fee,stroke:#c33,stroke-dasharray:5 5
+    classDef userNode fill:#fff,stroke:#333,stroke-width:2px,rx:15,ry:15
+    
     class SEC,MEM missing
+    class USERS_IN,USERS_OUT userNode
 ```
 
 > **Red-dashed boxes** — `secrets/` and `memory/` live on the server and were not included in the delivered material.
